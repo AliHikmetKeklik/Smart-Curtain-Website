@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Curtain</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/9.22.0/firebase-app-compat.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <!--<script defer src="/__/firebase/9.22.0/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-functions-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-messaging-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-storage-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-analytics-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-remote-config-compat.js"></script>
+    <script defer src="/__/firebase/9.22.0/firebase-performance-compat.js"></script>-->
+    <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <!-- <script defer src="/__/firebase/init.js?useEmulator=true"></script>-->
+
+    <style media="screen">
+         .custom-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .custom-col {
+            flex-basis: 50%;
+            padding: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .custom-col {
+                flex-basis: 100%;
+            }
+        }
+
+
+        .switch input {
+            display: none
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 50px;
+            width: 50px;
+            left: 5;
+            bottom: 5;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50px;
+        }
+
+        input:checked+.slider {
+            background-color: aqua;
+
+        }
+
+        input:checked+.slider::before {
+            transform: translateX(50px);
+
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid ">
+            <span class="navbar-brand mb-0 h1">SMART CURTAIN</span>
+        </div>
+    </nav>
+    <div class="justify-content-center">
+        <div class="card">
+            <div class="card-header">
+                <button name="curtain1" class="btn btn-primary c1" onclick="showCurtain('curtain1')">CURTAIN 1</button>
+                <button name="curtain2" class="btn btn-primary c2" onclick="showCurtain('curtain2')">CURTAIN 2</button>
+            </div>
+            <div class="card-body">
+                <div class="container" id="curtain1">
+                    <h4>Curtain 1:</h4>
+                    <div class="row custom-row">
+                        <div id="time1" class="col-md-6 custom-col" style="background-color: #e3f2fd;">
+                            <h2>Time:</h2>
+                            <div class="mb-3">
+                                <label for="timeInput" class="form-label">Select Time:</label>
+                                <input type="time" id="timeInput" name="timeInput" class=" custom-time-input">
+                            </div>
+                            <button id="saveTimeBtn1" class="btn btn-primary">Save</button>
+                        </div>
+                        <div id="temperature1" class="col-md-6 custom-col" style="background-color: #f8bbd0;">
+                            <h2>Temperature:</h2>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div id="openClose1" class="col-md-6 custom-col" style="background-color: #c8e6c9;">
+                            <h2>Open Close:</h2>
+                            <div class="row">
+                                <div class="btn-group-vertical">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button name="close" class="btn btn-danger" type="button">Close</button>
+                                        <button name="half" class="btn btn-primary" type="button">Half</button>
+                                        <button name="open" class="btn btn-success" type="button">Open</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sun1" class="col-md-6 custom-col" style="background-color: #ffe0b2;">
+                            <h2>Sun:</h2>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" id="curtain2" hidden>
+                    <div class="row custom-row">
+                        <h4>Curtain 2:</h4>
+                        <div id="time2" class="col-md-6 custom-col" style="background-color: #e3f2fd;">
+                            <h2>Time:</h2>
+                            <div class="mb-3">
+                                <label for="timeInput" class="form-label">Select Time:</label>
+                                <input type="time" id="timeInput" name="timeInput" class=" custom-time-input">
+                            </div>
+                            <button id="saveTimeBtn2" class="btn btn-primary">Save</button>
+                        </div>
+                        <div id="temperature2" class="col-md-6 custom-col" style="background-color: #f8bbd0;">
+                            <h2>Temperature:</h2>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                        <div id="openClose" class="col-md-6 custom-col" style="background-color: #c8e6c9;">
+                            <h2>Open Close:</h2>
+                            <div class="row">
+                                <div class="btn-group-vertical">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button name="close" class="btn btn-danger" type="button">Close</button>
+                                        <button name="half" class="btn btn-primary" type="button">Half</button>
+                                        <button name="open" class="btn btn-success" type="button">Open</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sun2" class="col-md-6 custom-col" style="background-color: #ffe0b2;">
+                            <h2>Sun:</h2>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+    </div>
+    <script>
+        function showCurtain(curtainId) {
+            var curtain1 = document.getElementById('curtain1');
+            var curtain2 = document.getElementById('curtain2');
+
+            if (curtainId === 'curtain1') {
+                curtain1.removeAttribute('hidden');
+                curtain2.setAttribute('hidden', 'true');
+            } else if (curtainId === 'curtain2') {
+                curtain1.setAttribute('hidden', 'true');
+                curtain2.removeAttribute('hidden');
+            }
+        }
+        //   CURTAIN 1
+        // Function to toggle the temperature switch when the sun switch is clicked
+        function toggleTemperature1() {
+            var sun1Switch = document.querySelector('#sun1 input[type="checkbox"]');
+            var temperature1Switch = document.querySelector('#temperature1 input[type="checkbox"]');
+
+            if (sun1Switch.checked) {
+                temperature1Switch.checked = false;
+            }
+        }
+
+        // Add event listener to the sun switch
+        var sun1Switch = document.querySelector('#sun1 input[type="checkbox"]');
+        sun1Switch.addEventListener('click', toggleTemperature1);
+
+        // Function to toggle the sun switch when the temperature switch is clicked
+        function toggleSun1() {
+            var sun1Switch = document.querySelector('#sun1 input[type="checkbox"]');
+            var temperature1Switch = document.querySelector('#temperature1 input[type="checkbox"]');
+            if (temperature1Switch.checked) {
+                sun1Switch.checked = false;
+            }
+        }
+
+        // Add event listener to the temperature switch
+        var temperature1Switch = document.querySelector('#temperature1 input[type="checkbox"]');
+        temperature1Switch.addEventListener('click', toggleSun1);
+
+
+        // Function to turn off temperature and sun toggles when the save button is clicked
+        function turnOffToggles1() {
+            var temperature1Switch = document.querySelector('#temperature1 input[type="checkbox"]');
+            var sun1Switch = document.querySelector('#sun1 input[type="checkbox"]');
+
+            temperature1Switch.checked = false;
+            sun1Switch.checked = false;
+        }
+
+        // Add event listener to the save button
+        var saveTimeBtn1 = document.querySelector('#saveTimeBtn1');
+        saveTimeBtn1.addEventListener('click', turnOffToggles1);
+
+        // CURTAIN 2
+
+        // Function to toggle the temperature switch when the sun switch is clicked
+        function toggleTemperature2() {
+            var sun2Switch = document.querySelector('#sun2 input[type="checkbox"]');
+            var temperature2Switch = document.querySelector('#temperature2 input[type="checkbox"]');
+
+            if (sun2Switch.checked) {
+                temperature2Switch.checked = false;
+            }
+        }
+
+        // Add event listener to the sun switch
+        var sun2Switch = document.querySelector('#sun2 input[type="checkbox"]');
+        sun2Switch.addEventListener('click', toggleTemperature2);
+
+        // Function to toggle the sun switch when the temperature switch is clicked
+        function toggleSun2() {
+            var sun2Switch = document.querySelector('#sun2 input[type="checkbox"]');
+            var temperature2Switch = document.querySelector('#temperature2 input[type="checkbox"]');
+            if (temperature2Switch.checked) {
+                sun2Switch.checked = false;
+            }
+        }
+
+        // Add event listener to the temperature switch
+        var temperature2Switch = document.querySelector('#temperature2 input[type="checkbox"]');
+        temperature2Switch.addEventListener('click', toggleSun2);
+
+
+        // Function to turn off temperature and sun toggles when the save button is clicked
+        function turnOffToggles2() {
+            var temperature2Switch = document.querySelector('#temperature2 input[type="checkbox"]');
+            var sun2Switch = document.querySelector('#sun2 input[type="checkbox"]');
+
+            temperature2Switch.checked = false;
+            sun2Switch.checked = false;
+        }
+
+        // Add event listener to the save button
+        var saveTimeBtn2 = document.querySelector('#saveTimeBtn2');
+        saveTimeBtn2.addEventListener('click', turnOffToggles2);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        /*// Import the functions you need from the SDKs you need
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+    
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyDqWPZkV-JshuEaqQjaKLbgXm75tX6smo8",
+          authDomain: "webbtry.firebaseapp.com",
+          databaseURL: "https://webbtry-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "webbtry",
+          storageBucket: "webbtry.appspot.com",
+          messagingSenderId: "619267636692",
+          appId: "1:619267636692:web:578f080f1598858f4d2a41",
+          measurementId: "G-5D3039H5E4"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        //const analytics = getAnalytics(app);
+    
+        import { getDatabase, set, get, update, remove, ref, childe }
+          from "firebase/database";
+    
+    
+        const db = getDatabase();*/
+
+    </script>
+</body>
+
+</html>
