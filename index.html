@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html> 
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -27,94 +27,124 @@
     <!-- <script defer src="/__/firebase/init.js?useEmulator=true"></script>-->
 
 </head>
+
 <body>
-    <nav class="navbar bg-body-tertiary">
+    <nav style="background-color: rgb(51, 203, 198);" class="navbar bg-body-tertiary">
         <div class="container-fluid ">
+            <img src="https://i.ibb.co/BKstZzX/logo.png" alt="Smart Home Systems">
             <span class="navbar-brand mb-0 h1">SMART CURTAIN</span>
         </div>
     </nav>
     <div class="justify-content-center">
         <div class="card">
-            <div class="card-header">
-                <button name="curtain1" class="btn btn-primary c1" onclick="showCurtain('curtain1')">CURTAIN 1</button>
-                <button name="curtain2" class="btn btn-primary c2" onclick="showCurtain('curtain2')">CURTAIN 2</button>
+            <div style="text-align: center;" class="card-header">
+                <button id="firstCurtain" name="curtain1" class="btn btn-primary c1"
+                    onclick="showCurtain('curtain1')">CURTAIN 1</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button style="background-color: gray;" id="secondCurtain" name="curtain2" class="btn btn-primary c2"
+                    onclick="showCurtain('curtain2')">CURTAIN 2</button>
             </div>
             <div class="card-body">
                 <div class="container" id="curtain1">
-                    <h4>Curtain 1:</h4>
+                    <h4>Curtain 1</h4>
                     <div class="row custom-row">
                         <div id="time1" class="col-md-6 custom-col" style="background-color: #e3f2fd;">
                             <h2>Time:</h2>
-                            <div class="mb-3">
-                                <label for="timeInput" class="form-label">Select Time:</label>
-                                <input type="time" id="timeInput" name="timeInput" class=" custom-time-input">
-                            </div>
-                            <button id="saveTimeBtn1" class="btn btn-primary">Save</button>
+                            <form action="/set-timer1" method="post">
+                                <div class="mb-3">
+                                    <label for="timer1open" class="form-label">Select Time to Open:</label>
+                                    <input type="time" id="timer1open" name="timer1open" class=" custom-time-input">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="timer1close" class=" margin-left-5 form-label">Select Time to
+                                        Close:</label>
+                                    <input type="time" id="timer1close" name="timer1close" class=" custom-time-input">
+                                </div>
+                                <button type="submit" id="saveTimeBtn1" class="btn btn-primary">Save</button>
+                            </form>
                         </div>
                         <div id="temperature1" class="col-md-6 custom-col" style="background-color: #f8bbd0;">
-                            <h2>Temperature:</h2>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
+                            <h2>Temperature:
+                                <label class="float-end switch">
+                                    <input type="checkbox" id="tempToggleButtonCurtain1" name="tempToggleButtonCurtain1"
+                                        onclick="sendToggleValue()">
+                                    <span class="slider round"></span>
+                                </label>
+                            </h2>
+                            <p>When the outside air is warmer than the indoor air,
+                                it enables the curtain to open automatically,
+                                and when it gets cold outside,
+                                it allows the curtain to close automatically.
+                            </p>
+                            <p style="color: #2196F3;">Energy saving <i class="fa-solid fa-check"></i></p>
                         </div>
                         <div id="openClose1" class="col-md-6 custom-col" style="background-color: #c8e6c9;">
                             <h2>Open Close:</h2>
                             <div class="row">
                                 <div class="btn-group-vertical">
                                     <div class="d-grid gap-2 d-md-block">
-                                        <button name="close" class="btn btn-danger" type="button">Close</button>
+                                        <button name="close" class="btn btn-success" type="button">Open</button>
                                         <button name="half" class="btn btn-primary" type="button">Half</button>
-                                        <button name="open" class="btn btn-success" type="button">Open</button>
+                                        <button name="open" class="btn btn-danger" type="button">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div id="sun1" class="col-md-6 custom-col" style="background-color: #ffe0b2;">
-                            <h2>Sun:</h2>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
+                            <h2>Sunlight:<label class="float-end switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label></h2>
+                            <p>When the sun rises, open the curtain.</p>
                         </div>
                     </div>
                 </div>
                 <div class="container" id="curtain2" hidden>
                     <div class="row custom-row">
-                        <h4>Curtain 2:</h4>
+                        <h4>Curtain 2</h4>
                         <div id="time2" class="col-md-6 custom-col" style="background-color: #e3f2fd;">
                             <h2>Time:</h2>
-                            <div class="mb-3">
-                                <label for="timeInput" class="form-label">Select Time:</label>
-                                <input type="time" id="timeInput" name="timeInput" class=" custom-time-input">
-                            </div>
-                            <button id="saveTimeBtn2" class="btn btn-primary">Save</button>
+                            <form action="/set-timer2" method="post">
+                                <div class="mb-3">
+                                    <label for="timer2open" class="form-label">Select Time to Open:</label>
+                                    <input type="time" id="timer2open" name="timer2open" class=" custom-time-input">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="timer2close" class=" margin-left-5 form-label">Select Time to
+                                        Close:</label>
+                                    <input type="time" id="timer2close" name="timer2close" class=" custom-time-input">
+                                </div>
+                                <button type="submit" id="saveTimeBtn2" class="btn btn-primary">Save</button>
+                            </form>
                         </div>
                         <div id="temperature2" class="col-md-6 custom-col" style="background-color: #f8bbd0;">
-                            <h2>Temperature:</h2>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
+                            <h2>Temperature:<label class="float-end switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label></h2>
+                            <p>When the outside air is warmer than the indoor air,
+                                it enables the curtain to open automatically,
+                                and when it gets cold outside,
+                                it allows the curtain to close automatically.
+                            </p>
+                            <p style="color: #2196F3;">Energy saving <i class="fa-solid fa-check"></i></p>
                         </div>
-                        <div id="openClose" class="col-md-6 custom-col" style="background-color: #c8e6c9;">
+                        <div id="openClose2" class="col-md-6 custom-col" style="background-color: #c8e6c9;">
                             <h2>Open Close:</h2>
                             <div class="row">
                                 <div class="btn-group-vertical">
                                     <div class="d-grid gap-2 d-md-block">
-                                        <button name="close" class="btn btn-danger" type="button">Close</button>
+                                        <button name="close" class="btn btn-success" type="button">Open</button>
                                         <button name="half" class="btn btn-primary" type="button">Half</button>
-                                        <button name="open" class="btn btn-success" type="button">Open</button>
+                                        <button name="open" class="btn btn-danger" type="button">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div id="sun2" class="col-md-6 custom-col" style="background-color: #ffe0b2;">
-                            <h2>Sun:</h2>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
+                            <h2>Sunlight:<label class="float-end switch">
+                                    <input type="checkbox">
+                                    <span class="slider round"></span>
+                                </label></h2>
+                            <p>When the sun rises, open the curtain.</p>
                         </div>
                     </div>
                 </div>

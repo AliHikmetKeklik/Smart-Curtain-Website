@@ -5,12 +5,25 @@ function showCurtain(curtainId) {
     if (curtainId === 'curtain1') {
         curtain1.removeAttribute('hidden');
         curtain2.setAttribute('hidden', 'true');
+        secondCurtain.style.backgroundColor = 'gray';
+        firstCurtain.style.backgroundColor = 'blue';
     } else if (curtainId === 'curtain2') {
         curtain1.setAttribute('hidden', 'true');
         curtain2.removeAttribute('hidden');
+        firstCurtain.style.backgroundColor = 'gray';
+        secondCurtain.style.backgroundColor = 'blue';
     }
 }
 //   CURTAIN 1
+
+
+function sendToggleValue() {
+    var toggleValue = document.getElementById("tempToggleButtonCurtain1").checked;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "/handleToggleValueCurtain1?value=" + toggleValue, true);
+    xhttp.send();
+}
+
 // Function to toggle the temperature switch when the sun switch is clicked
 function toggleTemperature1() {
     var sun1Switch = document.querySelector('#sun1 input[type="checkbox"]');
@@ -94,35 +107,3 @@ function turnOffToggles2() {
 // Add event listener to the save button
 var saveTimeBtn2 = document.querySelector('#saveTimeBtn2');
 saveTimeBtn2.addEventListener('click', turnOffToggles2);
-
-
-// FIREBASE
-
-/*// Import the functions you need from the SDKs you need
-        import { initializeApp } from "firebase/app";
-        import { getAnalytics } from "firebase/analytics";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-    
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyDqWPZkV-JshuEaqQjaKLbgXm75tX6smo8",
-          authDomain: "webbtry.firebaseapp.com",
-          databaseURL: "https://webbtry-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "webbtry",
-          storageBucket: "webbtry.appspot.com",
-          messagingSenderId: "619267636692",
-          appId: "1:619267636692:web:578f080f1598858f4d2a41",
-          measurementId: "G-5D3039H5E4"
-        };
-    
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        //const analytics = getAnalytics(app);
-    
-        import { getDatabase, set, get, update, remove, ref, childe }
-          from "firebase/database";
-    
-    
-        const db = getDatabase();*/
