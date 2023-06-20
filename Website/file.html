@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Curtain</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style media="screen">
+        .custom-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .custom-col {
+            flex-basis: 50%;
+            padding: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .custom-col {
+                flex-basis: 100%;
+            }
+        }
+
+
+        .switch input {
+            display: none
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 50px;
+            width: 50px;
+            left: 5;
+            bottom: 5;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50px;
+        }
+
+        input:checked+.slider {
+            background-color: aqua;
+
+        }
+
+        input:checked+.slider::before {
+            transform: translateX(50px);
+
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #2196F3;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav style="background-color: rgb(51, 203, 198);" class="navbar bg-body-tertiary">
+        <div class="container-fluid ">
+            <img src="https://i.ibb.co/BKstZzX/logo.png" alt="Smart Home Systems">
+            <span class="navbar-brand mb-0 h1">SMART CURTAIN</span>
+        </div>
+    </nav>
+    <div class="justify-content-center">
+        <div class="card">
+            <div style="text-align: center;" class="card-header">
+                <button id="firstCurtain" name="curtain1" class="btn btn-primary c1"
+                    onclick="showCurtain('curtain1')">CURTAIN 1</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button style="background-color: gray;" id="secondCurtain" name="curtain2" class="btn btn-primary c2"
+                    onclick="showCurtain('curtain2')">CURTAIN 2</button>
+            </div>
+            <div id="alertDiv1" class="alert alert-success alert-dismissable" style="display: none;">
+                <button id="closeBtn" type="button" class="close" aria-hidden="true"
+                    onclick="hideAlert1()">&times;</button>
+                Success! Time is set.
+            </div>
+            <div id="alertDiv2" class="alert alert-warning alert-dismissable" style="display: none;">
+                <button id="closeBtn" type="button" class="close" aria-hidden="true"
+                    onclick="hideAlert2()">&times;</button>
+                Set time deleted!
+            </div>
+            <div class="card-body">
+                <div class="container" id="curtain1">
+                    <h4>Curtain 1 </h4>
+                    <div class="row custom-row">
+                        <div id="time1" class="col-md-6 custom-col" style="background-color: #e3f2fd;">
+                            <h2>Time:</h2>
+                            <form action="" method="post">
+                                <div class="mb-3">
+                                    <label for="timer1open" class="form-label">Select Time to Open:</label>
+                                    <input type="time" id="timer1open" name="timer1open" class="custom-time-input">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="timer1close" class="margin-left-5 form-label">Select Time to
+                                        Close:</label>
+                                    <input type="time" id="timer1close" name="timer1close" class="custom-time-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="repeatDaily" class="form-check-label">Repeat every day:</label>
+                                    <input type="checkbox" id="repeatDaily" name="repeatDaily" class="form-check-input">
+                                </div>
+                                <button type="button" id="saveTimeBtn1" class="btn btn-primary"
+                                    onclick="executeTime1Functions()">Set</button>
+                                &nbsp;&nbsp;
+                                <button type="button" class="btn btn-danger" id="deleteTimeBtn1" name="deleteTimeBtn1"
+                                    onclick="executeTime1DeleteFunctions()">Delete</button>
+                            </form>
+
+                        </div>
+
+                        <div id="temperature1" class="col-md-6 custom-col" style="background-color: #f8bbd0;">
+                            <h2>Temperature:
+                                <label class="float-end switch">
+                                    <input type="checkbox" id="tempToggleButtonCurtain1" name="tempToggleButtonCurtain1"
+                                        onclick="sendTempToggleValue()">
+                                    <span class="slider round"></span>
+                                </label>
+                            </h2>
+                            <p>During winter, when the temperature of the outside air exceeds that of the indoor air,
+                                it triggers the automatic opening of the curtain. Conversely,
+                                when the outside temperature drops, the curtain is automatically closed.
+                                The same principle applies in summer, but in reverse.
+                            </p>
+                            <p style="color: #2196F3; display: inline-block;">Energy saving <i
+                                class="fa-solid fa-check"></i></p>
+                        <p style="display: inline-block; margin-left: 30px;">Temp: <span style="color: black"
+                                id="temperatureValue1"></span></p>
+                        </div>
+                        <div id="openClose1" class="col-md-6 custom-col" style="background-color: #c8e6c9;">
+                            <h2>Open Close:</h2>
+                            <div class="row">
+                                <div class="btn-group-vertical">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button  id="open1" name="opne1" class="btn btn-success" type="button" onclick="openCurtain1()">Open</button>
+                                        <button  id="close1" name="close1" class="btn btn-danger" type="button" onclick="closeCurtain1()">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sun1" class="col-md-6 custom-col" style="background-color: #ffe0b2;">
+                            <h2>Sunlight:<label class="float-end switch">
+                                    <input type="checkbox" id="sunToggleButtonCurtain1" name="sunToggleButtonCurtain1"
+                                        onclick="sendSunToggleValue()">
+                                    <span class="slider round"></span>
+                                </label></h2>
+                            <p>When the sun rises, open the curtain.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" id="curtain2" hidden>
+                    <div class="row custom-row">
+                        <h4>Curtain 2</h4>
+                        <div id="time2" class="col-md-6 custom-col" style="background-color: #e3f2fd;">
+                            <h2>Time:</h2>
+                            <form action="" method="post">
+                                <div class="mb-3">
+                                    <label for="timer2open" class="form-label">Select Time to Open:</label>
+                                    <input type="time" id="timer2open" name="timer2open" class=" custom-time-input">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for="timer2close" class=" margin-left-5 form-label">Select Time to
+                                        Close:</label>
+                                    <input type="time" id="timer2close" name="timer2close" class=" custom-time-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="repeatDaily2" class="form-check-label">Repeat every day:</label>
+                                    <input type="checkbox" id="repeatDaily2" name="repeatDaily2"
+                                        class="form-check-input">
+                                </div>
+                                <button type="button" id="saveTimeBtn2" class="btn btn-primary"
+                                    onclick="executeTime2Functions()">Set</button>
+                                &nbsp;&nbsp;
+                                <button type="button" class="btn btn-danger" id="deleteTimeBtn1" name="deleteTimeBtn1"
+                                    onclick="executeTime2DeleteFunctions()">Delete</button>
+                            </form>
+                        </div>
+                        <div id="temperature2" class="col-md-6 custom-col" style="background-color: #f8bbd0;">
+                            <h2>Temperature:<label class="float-end switch">
+                                    <input type="checkbox" id="tempToggleButtonCurtain2" name="tempToggleButtonCurtain2"
+                                        onclick="sendTempToggleValue2()">
+                                    <span class="slider round"></span>
+                                </label></h2>
+                            <p>During winter, when the temperature of the outside air exceeds that of the indoor air,
+                                it triggers the automatic opening of the curtain. Conversely,
+                                when the outside temperature drops, the curtain is automatically closed.
+                                The same principle applies in summer, but in reverse.
+                            </p>
+                            <p style="color: #2196F3; display: inline-block;">Energy saving <i
+                                    class="fa-solid fa-check"></i></p>
+                            <p style="display: inline-block; margin-left: 30px;">Temp: <span style="color: black"
+                                    id="temperatureValue2"></span></p>
+
+
+
+                        </div>
+                        <div id="openClose2" class="col-md-6 custom-col" style="background-color: #c8e6c9;">
+                            <h2>Open Close:</h2>
+                            <div class="row">
+                                <div class="btn-group-vertical">
+                                    <div class="d-grid gap-2 d-md-block">
+                                        <button  id="open2" name="opne1" class="btn btn-success" type="button" onclick="openCurtain2()">Open</button>
+                                        <button  id="close2" name="close1" class="btn btn-danger" type="button" onclick="closeCurtain2()">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sun2" class="col-md-6 custom-col" style="background-color: #ffe0b2;">
+                            <h2>Sunlight:<label class="float-end switch">
+                                    <input type="checkbox" id="sunToggleButtonCurtain2" name="sunToggleButtonCurtain2"
+                                        onclick="sendSunToggleValue2()">
+                                    <span class="slider round"></span>
+                                </label></h2>
+                            <p>When the sun rises, open the curtain.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function retrieveToggleStates() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    var toggleStates = JSON.parse(this.responseText);
+                    // Update toggle buttons based on retrieved states
+                    toggleStates.forEach(function (toggleState) {
+                        var toggleButtonId = toggleState.id;
+                        var toggleButtonTemp = toggleState.temp;
+                        var toggleButtonSun = toggleState.sun;
+                        var temperature = toggleState.currentTemp;
+                        if (toggleButtonId == 1) {
+                            document.getElementById("tempToggleButtonCurtain1").checked = toggleButtonTemp;
+                            document.getElementById("sunToggleButtonCurtain1").checked = toggleButtonSun;
+                            document.getElementById("temperatureValue1").textContent = temperature;
+                        } else if (toggleButtonId == 2) {
+                            document.getElementById("tempToggleButtonCurtain2").checked = toggleButtonTemp;
+                            document.getElementById("sunToggleButtonCurtain2").checked = toggleButtonSun;
+                            document.getElementById("temperatureValue2").textContent = temperature;
+                        }
+
+                    });
+                }
+            };
+            xhttp.open("GET", "/retrieveToggleStates", true);
+            xhttp.send();
+        }
+
+        // Call the retrieveToggleStates function when the page loads
+        window.addEventListener("load", retrieveToggleStates);
+
+
+        function showAlert1() {
+            document.getElementById('alertDiv1').style.display = 'block';
+            document.getElementById('alertDiv2').style.display = 'none';
+        }
+
+        function hideAlert1() {
+            document.getElementById('alertDiv1').style.display = 'none';
+        }
+        function showAlert2() {
+            document.getElementById('alertDiv2').style.display = 'block';
+            document.getElementById('alertDiv1').style.display = 'none';
+        }
+
+        function hideAlert2() {
+            document.getElementById('alertDiv2').style.display = 'none';
+        }
+        function showCurtain(curtainId) {
+            var curtain1 = document.getElementById('curtain1');
+            var curtain2 = document.getElementById('curtain2');
+
+            if (curtainId === 'curtain1') {
+                curtain1.removeAttribute('hidden');
+                curtain2.setAttribute('hidden', 'true');
+                secondCurtain.style.backgroundColor = 'gray';
+                firstCurtain.style.backgroundColor = 'blue';
+            } else if (curtainId === 'curtain2') {
+                curtain1.setAttribute('hidden', 'true');
+                curtain2.removeAttribute('hidden');
+                firstCurtain.style.backgroundColor = 'gray';
+                secondCurtain.style.backgroundColor = 'blue';
+            }
+        }
+        //  AJAX CURTAIN 1
+        function executeTime1Functions() {
+            var timer1close = document.getElementById("timer1close").value;
+            var timer1open = document.getElementById("timer1open").value;
+            var repeatDaily = document.getElementById("repeatDaily").checked;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/set-timer1?timer1open=" + timer1open + "&timer1close=" + timer1close + "&repeatDaily=" + repeatDaily, true);
+            xhttp.send();
+            showAlert1();
+        }
+        function executeTime1DeleteFunctions() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/set-delete1", true);
+            xhttp.send();
+            showAlert2();
+        }
+        function sendTempToggleValue() {
+            var toggleValue = document.getElementById("tempToggleButtonCurtain1").checked;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/handleTempToggleValueCurtain1?value=" + toggleValue, true);
+            xhttp.send();
+        }
+        function sendSunToggleValue() {
+            var toggleValue = document.getElementById("sunToggleButtonCurtain1").checked;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/handleSunToggleValueCurtain1?value=" + toggleValue, true);
+            xhttp.send();
+        }
+        function openCurtain1() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "http://192.168.0.108/open-curtain1", true);
+            xhttp.send();
+        }
+        function closeCurtain1() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "http://192.168.0.108/close-curtain1", true);
+            xhttp.send();
+        }
+        // AJAX CURTAIN 2
+        function executeTime2Functions() {
+            var timer2close = document.getElementById("timer2close").value;
+            var timer2open = document.getElementById("timer2open").value;
+            var repeatDaily2 = document.getElementById("repeatDaily2").checked;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/set-timer2?timer2open=" + timer2open + "&timer2close=" + timer2close + "&repeatDaily2=" + repeatDaily2, true);
+            xhttp.send();
+            showAlert1();
+        }
+        function executeTime2DeleteFunctions() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/set-delete2", true);
+            xhttp.send();
+            showAlert2();
+        }
+        function sendTempToggleValue2() {
+            var toggleValue = document.getElementById("tempToggleButtonCurtain2").checked;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/handleTempToggleValueCurtain2?value=" + toggleValue, true);
+            xhttp.send();
+        }
+        function sendSunToggleValue2() {
+            var toggleValue = document.getElementById("sunToggleButtonCurtain2").checked;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/handleSunToggleValueCurtain2?value=" + toggleValue, true);
+            xhttp.send();
+        }
+        function openCurtain2() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "http://192.168.0.115/open-curtain2", true);
+            xhttp.send();
+        }
+        function closeCurtain2() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "http://192.168.0.115/close-curtain2", true);
+            xhttp.send();
+        }
+        
+
+
+        //  Curtain 1 Function to turn off sun toggles when the save button is clicked
+        function turnOffToggles1() {
+            var temperature1Switch = document.querySelector('#temperature1 input[type="checkbox"]');
+            var sun1Switch = document.querySelector('#sun1 input[type="checkbox"]');
+
+            sun1Switch.checked = false;
+        }
+
+        // Add event listener to the save button
+        var saveTimeBtn1 = document.querySelector('#saveTimeBtn1');
+        saveTimeBtn1.addEventListener('click', turnOffToggles1);
+
+
+        // curtain 2 Function to turn off sun toggles when the save button is clicked
+        function turnOffToggles2() {
+            var temperature2Switch = document.querySelector('#temperature2 input[type="checkbox"]');
+            var sun2Switch = document.querySelector('#sun2 input[type="checkbox"]');
+
+            sun2Switch.checked = false;
+        }
+
+        // Add event listener to the save button
+        var saveTimeBtn2 = document.querySelector('#saveTimeBtn2');
+        saveTimeBtn2.addEventListener('click', turnOffToggles2);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
